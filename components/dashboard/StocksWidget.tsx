@@ -84,7 +84,7 @@ const StocksWidget: React.FC<StocksWidgetProps> = ({
 
     return (
         <div
-            className="bg-white rounded-lg shadow h-full flex flex-col cursor-pointer"
+            className="bg-white text-black rounded-lg shadow h-full flex flex-col cursor-pointer"
             onClick={() => router.push('/stocks')}
         >
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 text-white">

@@ -51,7 +51,7 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ newsData }) => {
     const displayedArticles = newsData?.articles?.slice(0, 4) || [];
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white text-black rounded-lg shadow-md p-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
                 <h2 className="text-xl font-bold mb-2 sm:mb-0">
                     Latest News
@@ -138,8 +138,11 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ newsData }) => {
             )}
 
             <div className="mt-6 text-center">
-                <Link href="/news" className="inline-block px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        View all news
+                <Link
+                    href="/news"
+                    className="inline-block px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                    View all news
                 </Link>
             </div>
         </div>

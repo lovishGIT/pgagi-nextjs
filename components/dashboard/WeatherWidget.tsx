@@ -31,7 +31,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({
 
     if (!weatherData || !weatherData.weather) {
         return (
-            <div className="bg-white rounded-lg shadow p-4 h-full flex items-center justify-center">
+            <div className="bg-white text-black rounded-lg shadow p-4 h-full flex items-center justify-center">
                 <p className="text-gray-500">
                     Weather data unavailable
                 </p>

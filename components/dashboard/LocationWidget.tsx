@@ -35,7 +35,7 @@ const LocationWidget: React.FC<LocationWidgetProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 h-full">
+        <div className="bg-white text-black rounded-lg shadow-md p-6 h-full">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">My Locations</h2>
                 <button

@@ -48,7 +48,7 @@ const TodoWidget: React.FC<TodoWidgetProps> = ({
     const totalCount = todos.length;
 
     return (
-        <div className="bg-white rounded-lg shadow h-full flex flex-col">
+        <div className="bg-white text-black rounded-xl shadow h-full flex flex-col">
             <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
                 <h3 className="font-bold text-lg">Todo List</h3>
                 <p className="text-sm text-green-100">

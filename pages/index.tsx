@@ -68,7 +68,7 @@ export default function Dashboard({
                 </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Link href="/weather" className="p-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
                     <h3 className="text-xl font-bold mb-2">
                         Weather Details
@@ -98,7 +98,7 @@ export default function Dashboard({
                         performers
                     </p>
                 </Link>
-            </div>
+            </div> */}
         </Layout>
     );
 }
