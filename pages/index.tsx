@@ -124,9 +124,9 @@ export const getServerSideProps: GetServerSideProps = withAuth(
                 userLocations[0].lat,
                 userLocations[0].lng
             );
-            const stocksData = await fetchStocks('MSFT');
-            const newsData = await fetchNews();
-            const todos = fetchTodos();
+            const stocksData = await fetchStocks(dispatch, 'MSFT');
+            const newsData = await fetchNews(dispatch);
+            const todos = await fetchTodos(dispatch);
 
             return {
                 props: {

@@ -1,25 +1,10 @@
-import { AppDispatch } from '@/store';
+import { AppDispatch, store } from '@/store';
 import { setTodos, addTodo } from '@/store/slices/todos.slice';
+import { Todo } from '@/types';
 
 export const fetchTodos = async (dispatch: AppDispatch) => {
     try {
-        const todos = [
-            {
-                id: 1,
-                title: 'Complete dashboard project',
-                completed: false,
-            },
-            {
-                id: 2,
-                title: 'Research stock markets',
-                completed: true,
-            },
-            {
-                id: 3,
-                title: 'Schedule doctor appointment',
-                completed: false,
-            },
-        ];
+        const todos: Todo[] = store.getState().todos.todos || [];
         dispatch(setTodos(todos));
     } catch (error) {
         console.error('Error fetching todos:', error);
@@ -31,7 +16,9 @@ export const postTodo = async (
     title: string
 ) => {
     try {
-        const newTodo = { id: Date.now(), title, completed: false };
+        const newTodo: Todo = {
+            title, completed: false, createdAt: Date.now().toLocaleString()
+        };
         dispatch(addTodo(newTodo));
     } catch (error) {
         console.error('Error posting new todo:', error);

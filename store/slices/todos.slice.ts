@@ -19,9 +19,9 @@ const todosSlice = createSlice({
         addTodo: (state, action: PayloadAction<Todo>) => {
             state.todos.push(action.payload);
         },
-        toggleTodo: (state, action: PayloadAction<number>) => {
+        toggleTodo: (state, action: PayloadAction<string>) => {
             const todo = state.todos.find(
-                (t) => t.id === action.payload
+                (t) => t.title === action.payload
             );
             if (todo) todo.completed = !todo.completed;
         },

@@ -1,8 +1,8 @@
 export interface UserLocation {
     id?: number;
     name: string;
-    lat: Number;
-    lng: Number;
+    lat: number;
+    lng: number;
 }
 
 export interface User {
@@ -32,8 +32,7 @@ export interface Stock {
 }
 
 export interface Todo {
-    id: number;
     title: string;
     completed: boolean;
-    createdAt: Date;
+    createdAt: string;
 }
