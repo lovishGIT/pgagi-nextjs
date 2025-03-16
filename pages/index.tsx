@@ -1,4 +1,3 @@
-// pages/index.tsx
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import { withAuth } from '@/components/auth/withAuth';
@@ -63,35 +62,33 @@ export default function Dashboard({
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Link href="/weather" className="p-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                        <h3 className="text-xl font-bold mb-2">
-                            Weather Details
-                        </h3>
-                        <p>
-                            View detailed weather forecasts for all
-                            your locations
-                        </p>
-
+                    <h3 className="text-xl font-bold mb-2">
+                        Weather Details
+                    </h3>
+                    <p>
+                        View detailed weather forecasts for all
+                        your locations
+                    </p>
                 </Link>
 
                 <Link href="/todos" className="p-6 bg-gradient-to-r from-green-500 to-green-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                        <h3 className="text-xl font-bold mb-2">
-                            Todo List
-                        </h3>
-                        <p>
-                            Manage your tasks and track your
-                            productivity
-                        </p>
-
+                    <h3 className="text-xl font-bold mb-2">
+                        Todo List
+                    </h3>
+                    <p>
+                        Manage your tasks and track your
+                        productivity
+                    </p>
                 </Link>
 
                 <Link href="/stocks" className="p-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                        <h3 className="text-xl font-bold mb-2">
-                            Stock Analysis
-                        </h3>
-                        <p>
-                            Compare your portfolio with top market
-                            performers
-                        </p>
+                    <h3 className="text-xl font-bold mb-2">
+                        Stock Analysis
+                    </h3>
+                    <p>
+                        Compare your portfolio with top market
+                        performers
+                    </p>
                 </Link>
             </div>
         </Layout>

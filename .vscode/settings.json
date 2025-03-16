@@ -6,6 +6,8 @@
         "**/dist": true,
         "**/.next": true,
         "**/build": true,
+        "**/package-lock.json": true,
+        "**/yarn.lock": true,
     },
     "editor.autoIndent": "advanced",
     "editor.formatOnSave": true,
