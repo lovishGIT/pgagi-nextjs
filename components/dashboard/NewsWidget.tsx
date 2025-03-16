@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import Link from 'next/link';
 
 interface NewsArticle {
@@ -15,16 +15,26 @@ interface NewsArticle {
     content: string;
 }
 
-interface NewsWidgetProps {
-    newsData: {
-        articles: NewsArticle[];
-        status: string;
-        totalResults: number;
-    };
-}
-
-const NewsWidget: React.FC<NewsWidgetProps> = ({ newsData }) => {
+const NewsWidget = () => {
     const [activeCategory, setActiveCategory] = useState('business');
+    const [newsData, setNewsData] = useState<NewsArticle[] | null>(null);
+    React.useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const response = await fetch(
+                    `/api/services/news?category=${activeCategory}&limit=${4}`
+                );
+                const data = await response.json();
+                console.log("News Data", data.articles);
+                setNewsData(data.articles);
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                setNewsData(null);
+            }
+        };
+        fetchNews();
+    }, [activeCategory]);
+
     const categories = [
         'business',
         'technology',
@@ -46,9 +56,6 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ newsData }) => {
             options
         );
     };
-
-    // Get the first 4 articles
-    const displayedArticles = newsData?.articles?.slice(0, 4) || [];
 
     return (
         <div className="bg-white text-black rounded-lg shadow-md p-6">
@@ -76,17 +83,13 @@ const NewsWidget: React.FC<NewsWidgetProps> = ({ newsData }) => {
                 </div>
             </div>
 
-            {newsData?.status === 'error' ? (
+            {!newsData || newsData.length <= 0 ? (
                 <div className="py-4 text-center text-gray-500">
                     Unable to load news articles at this time.
                 </div>
-            ) : displayedArticles.length === 0 ? (
-                <div className="py-4 text-center text-gray-500">
-                    No articles available.
-                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {displayedArticles.map((article, index) => (
+                    {newsData.map((article: NewsArticle, index: number) => (
                         <div
                             key={index}
                             className="border rounded-lg overflow-hidden flex flex-col"

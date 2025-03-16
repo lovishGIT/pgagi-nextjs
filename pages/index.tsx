@@ -1,10 +1,9 @@
 import React from 'react';
-import { GetServerSideProps } from 'next';
-import { withAuth } from '@/components/auth/withAuth';
 import Layout from '@/components/global/Layout';
+import { withAuth } from '@/components/auth/withAuth';
 import { useAuth } from '@/hooks/useAuth';
-import Link from 'next/link';
 import { getSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
 
 import WeatherWidget from '@/components/dashboard/WeatherWidget';
 import TodoWidget from '@/components/dashboard/TodoWidget';
@@ -13,27 +12,42 @@ import NewsWidget from '@/components/dashboard/NewsWidget';
 import LocationWidget from '@/components/dashboard/LocationWidget';
 
 import { fetchUserLocations } from '@/services/location.service';
-import { fetchWeather } from '@/services/weather.service';
-import { fetchStocks } from '@/services/stocks.service';
-import { fetchNews } from '@/services/news.service';
 import { fetchTodos } from '@/services/todo.service';
 import { useAppDispatch } from '@/store/hooks';
+import { setTodos } from '@/store/slices/todos.slice';
+import { setLocations } from '@/store/slices/location.slice';
+import { setStocks } from '@/store/slices/stocks.slice';
+import { UserLocation } from '@/types';
 
 interface DashboardProps {
-    weatherData: any;
     stocksData: any;
-    newsData: any;
-    userLocations: any[];
     todos: any[];
 }
 
 export default function Dashboard({
-    weatherData,
     stocksData,
-    newsData,
-    userLocations,
     todos,
 }: DashboardProps) {
+    const dispatch = useAppDispatch();
+    const [userLocations, setUserLocations] = React.useState<UserLocation[]>([]);
+
+    React.useEffect(() => {
+        dispatch(setStocks(stocksData));
+        dispatch(setTodos(todos));
+
+        const fetchFromUser = async () => {
+            const locations = await fetchUserLocations("new");
+            if (locations) {
+                setUserLocations(locations);
+                dispatch(setLocations(locations));
+            }
+        };
+        fetchFromUser();
+    }, [
+        dispatch,
+        stocksData,
+        todos,
+    ]);
     const { session } = useAuth();
 
     return (
@@ -51,7 +65,7 @@ export default function Dashboard({
                 <div className="col-span-1 lg:col-span-2">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <LocationWidget locations={userLocations} />
-                        <WeatherWidget weatherData={weatherData} />
+                        <WeatherWidget locations={userLocations} />
                     </div>
                 </div>
 
@@ -64,41 +78,9 @@ export default function Dashboard({
                 </div>
 
                 <div className="col-span-1 lg:col-span-3 xl:col-span-4">
-                    <NewsWidget newsData={newsData} />
+                    <NewsWidget />
                 </div>
             </div>
-
-            {/* <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Link href="/weather" className="p-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                    <h3 className="text-xl font-bold mb-2">
-                        Weather Details
-                    </h3>
-                    <p>
-                        View detailed weather forecasts for all
-                        your locations
-                    </p>
-                </Link>
-
-                <Link href="/todos" className="p-6 bg-gradient-to-r from-green-500 to-green-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                    <h3 className="text-xl font-bold mb-2">
-                        Todo List
-                    </h3>
-                    <p>
-                        Manage your tasks and track your
-                        productivity
-                    </p>
-                </Link>
-
-                <Link href="/stocks" className="p-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
-                    <h3 className="text-xl font-bold mb-2">
-                        Stock Analysis
-                    </h3>
-                    <p>
-                        Compare your portfolio with top market
-                        performers
-                    </p>
-                </Link>
-            </div> */}
         </Layout>
     );
 }
@@ -117,23 +99,12 @@ export const getServerSideProps: GetServerSideProps = withAuth(
         }
 
         try {
-            const dispatch = useAppDispatch();
-            const userLocations = await fetchUserLocations(dispatch);
-            const weatherData = await fetchWeather(
-                dispatch,
-                userLocations[0].lat,
-                userLocations[0].lng
-            );
-            const stocksData = await fetchStocks(dispatch, 'MSFT');
-            const newsData = await fetchNews(dispatch);
-            const todos = await fetchTodos(dispatch);
+            const stocksData = await fetchStocks('MSFT');
+            const todos = await fetchTodos();
 
             return {
                 props: {
-                    weatherData,
                     stocksData,
-                    newsData,
-                    userLocations,
                     todos,
                 },
             };
@@ -142,10 +113,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
 
             return {
                 props: {
-                    weatherData: {},
                     stocksData: {},
-                    newsData: { articles: [] },
-                    userLocations: [],
                     todos: [],
                 },
             };

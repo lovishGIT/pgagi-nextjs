@@ -1,23 +1,12 @@
-// components/dashboard/LocationWidget.tsx
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { UserLocation } from '@/types';
 
-interface Location {
-    id: number;
-    name: string;
-    lat: number;
-    lng: number;
-}
-
-interface LocationWidgetProps {
-    locations: Location[];
-}
-
-const LocationWidget: React.FC<LocationWidgetProps> = ({
-    locations,
+const LocationWidget = ({ locations }: {
+    locations: UserLocation[];
 }) => {
     const [selectedLocation, setSelectedLocation] =
-        useState<Location | null>(
+        useState<UserLocation | null>(
             locations && locations.length > 0 ? locations[0] : null
         );
     const [isAddingLocation, setIsAddingLocation] = useState(false);

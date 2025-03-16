@@ -36,3 +36,22 @@ export interface Todo {
     completed: boolean;
     createdAt: string;
 }
+
+export interface WeatherData {
+    main: {
+        temp: number;
+        feels_like: number;
+        humidity: number;
+        pressure: number;
+    };
+    weather: {
+        id: number;
+        main: string;
+        description: string;
+        icon: string;
+    }[];
+    wind: {
+        speed: number;
+    };
+    name: string;
+}

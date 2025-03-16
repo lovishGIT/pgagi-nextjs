@@ -1,33 +1,24 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { UserLocation, WeatherData } from '@/types';
 
-interface WeatherData {
-    main: {
-        temp: number;
-        feels_like: number;
-        humidity: number;
-        pressure: number;
-    };
-    weather: {
-        id: number;
-        main: string;
-        description: string;
-        icon: string;
-    }[];
-    wind: {
-        speed: number;
-    };
-    name: string;
-}
-
-interface WeatherWidgetProps {
-    weatherData: WeatherData;
-}
-
-const WeatherWidget: React.FC<WeatherWidgetProps> = ({
-    weatherData,
+const WeatherWidget = ({ locations }: {
+    locations: UserLocation[];
 }) => {
     const router = useRouter();
+    const [weatherData, setWeatherData] = React.useState<WeatherData | null>(null);
+
+    React.useEffect(() => {
+        const fetchWeatherData = async () => {
+            if (locations && locations.length > 0) {
+                const weather = await fetch(`/api/services/weather?lat=${locations[0].lat}&lon=${locations[0].lng}`);
+                const data = await weather.json();
+                console.log(data);
+                setWeatherData(data);
+            }
+        };
+        fetchWeatherData();
+    }, [locations]);
 
     if (!weatherData || !weatherData.weather) {
         return (

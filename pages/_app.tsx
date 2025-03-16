@@ -6,10 +6,10 @@ import { SessionProvider } from 'next-auth/react';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <SessionProvider session={pageProps.session}>
-            <Provider store={store}>
+        <Provider store={store}>
+            <SessionProvider session={pageProps.session}>
                 <Component {...pageProps} />
-            </Provider>
-        </SessionProvider>
+            </SessionProvider>
+        </Provider>
     );
 }

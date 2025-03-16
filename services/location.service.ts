@@ -1,5 +1,4 @@
-import { AppDispatch, store } from '@/store';
-import { setLocations } from '@/store/slices/location.slice';
+import { store } from '@/store';
 import { UserLocation } from '@/types';
 
 const defaultLocations: UserLocation[] = [
@@ -7,7 +6,7 @@ const defaultLocations: UserLocation[] = [
     { id: 2, name: 'Sample Work', lat: 30.7333, lng: 76.7794 },
 ];
 
-export const fetchUserLocations = async (dispatch: AppDispatch): Promise<UserLocation[]> => {
+export const fetchUserLocations = async (type: string): Promise<UserLocation[]> => {
     const locations =
         store.getState().location.locations || defaultLocations;
     try {
@@ -15,7 +14,7 @@ export const fetchUserLocations = async (dispatch: AppDispatch): Promise<UserLoc
             console.warn(
                 'Geolocation is not supported by this browser.'
             );
-            return defaultLocations;
+            return !type ? locations : [];
         }
 
         return new Promise((resolve) => {
@@ -30,7 +29,6 @@ export const fetchUserLocations = async (dispatch: AppDispatch): Promise<UserLoc
                         },
                     ];
 
-                    dispatch(setLocations(userLocation));
                     resolve(userLocation);
                     return userLocation;
                 },
@@ -40,7 +38,7 @@ export const fetchUserLocations = async (dispatch: AppDispatch): Promise<UserLoc
                         error
                     );
                     resolve(defaultLocations);
-                    return defaultLocations;
+                    return !type ? locations : [];
                 }
             );
         });
@@ -49,6 +47,6 @@ export const fetchUserLocations = async (dispatch: AppDispatch): Promise<UserLoc
             'Unexpected error fetching user locations:',
             error
         );
-        return defaultLocations;
+        return !type ? locations : [];
     }
 };

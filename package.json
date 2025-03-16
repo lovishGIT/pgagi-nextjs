@@ -38,5 +38,9 @@
         "eslint": "9.22.0",
         "eslint-config-next": "15.2.2",
         "typescript": "5.8.2"
+    },
+    "resolutions": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
     }
 }
