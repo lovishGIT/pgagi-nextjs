@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '@/components/global/Layout';
 import { withAuth } from '@/components/auth/withAuth';
 import { useAuth } from '@/hooks/useAuth';
@@ -13,41 +13,48 @@ import LocationWidget from '@/components/dashboard/LocationWidget';
 
 import { fetchUserLocations } from '@/services/location.service';
 import { fetchTodos } from '@/services/todo.service';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setTodos } from '@/store/slices/todos.slice';
 import { setLocations } from '@/store/slices/location.slice';
-import { setStocks } from '@/store/slices/stocks.slice';
+import { setWeather } from '@/store/slices/weather.slice';
 import { UserLocation } from '@/types';
 
 interface DashboardProps {
-    stocksData: any;
     todos: any[];
+    initialWeather: any | null;
 }
 
 export default function Dashboard({
-    stocksData,
     todos,
+    initialWeather,
 }: DashboardProps) {
     const dispatch = useAppDispatch();
-    const [userLocations, setUserLocations] = React.useState<UserLocation[]>([]);
+    const [userLocations, setUserLocations] = useState<
+        UserLocation[]
+    >([]);
 
-    React.useEffect(() => {
-        dispatch(setStocks(stocksData));
+    const weather = useAppSelector((state) => state.weather.data);
+    const weatherError = useAppSelector(
+        (state) => state.weather.error
+    );
+
+    useEffect(() => {
         dispatch(setTodos(todos));
 
         const fetchFromUser = async () => {
-            const locations = await fetchUserLocations("new");
+            const locations = await fetchUserLocations('new');
             if (locations) {
                 setUserLocations(locations);
                 dispatch(setLocations(locations));
             }
         };
         fetchFromUser();
-    }, [
-        dispatch,
-        stocksData,
-        todos,
-    ]);
+
+        if (initialWeather) {
+            dispatch(setWeather(initialWeather));
+        }
+    }, [dispatch, todos, initialWeather]);
+
     const { session } = useAuth();
 
     return (
@@ -65,7 +72,10 @@ export default function Dashboard({
                 <div className="col-span-1 lg:col-span-2">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <LocationWidget locations={userLocations} />
-                        <WeatherWidget locations={userLocations} />
+
+                        <WeatherWidget
+                            locations={userLocations}
+                        />
                     </div>
                 </div>
 
@@ -74,7 +84,7 @@ export default function Dashboard({
                 </div>
 
                 <div className="col-span-1 lg:col-span-2 xl:col-span-1">
-                    <StocksWidget stocksData={stocksData} />
+                    <StocksWidget />
                 </div>
 
                 <div className="col-span-1 lg:col-span-3 xl:col-span-4">
@@ -99,12 +109,10 @@ export const getServerSideProps: GetServerSideProps = withAuth(
         }
 
         try {
-            const stocksData = await fetchStocks('MSFT');
             const todos = await fetchTodos();
 
             return {
                 props: {
-                    stocksData,
                     todos,
                 },
             };
@@ -113,8 +121,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(
 
             return {
                 props: {
-                    stocksData: {},
                     todos: [],
+                    initialWeather: null,
                 },
             };
         }

@@ -12,19 +12,17 @@ const LocationWidget = ({ locations }: {
     const [isAddingLocation, setIsAddingLocation] = useState(false);
     const [newLocationName, setNewLocationName] = useState('');
 
-    // For demo purposes - in a real app, this would make an API call
     const handleAddLocation = (e: React.FormEvent) => {
         e.preventDefault();
         setIsAddingLocation(false);
         setNewLocationName('');
-        // You would typically make an API call to add the location here
         alert(
             `Location "${newLocationName}" would be added with geocoding API`
         );
     };
 
     return (
-        <div className="bg-white text-black rounded-lg shadow-md p-6 h-full">
+        <div className="bg-white text-black rounded-lg p-6 h-[300px] overflow-x-hidden overflow-y-scroll border-2 border-gray-400 dark:border-0 shadow-sm">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">My Locations</h2>
                 <button

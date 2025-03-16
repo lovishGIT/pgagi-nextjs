@@ -25,7 +25,6 @@ const NewsWidget = () => {
                     `/api/services/news?category=${activeCategory}&limit=${4}`
                 );
                 const data = await response.json();
-                console.log("News Data", data.articles);
                 setNewsData(data.articles);
             } catch (error) {
                 console.error('Error fetching news:', error);
@@ -58,7 +57,7 @@ const NewsWidget = () => {
     };
 
     return (
-        <div className="bg-white text-black rounded-lg shadow-md p-6">
+        <div className="bg-white border-2 border-gray-400 dark:border-0 rounded-lg shadow-md p-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
                 <h2 className="text-xl font-bold mb-2 sm:mb-0">
                     Latest News
@@ -89,54 +88,56 @@ const NewsWidget = () => {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {newsData.map((article: NewsArticle, index: number) => (
-                        <div
-                            key={index}
-                            className="border rounded-lg overflow-hidden flex flex-col"
-                        >
-                            <div className="h-48 bg-gray-100 relative">
-                                {article.urlToImage ? (
-                                    <div
-                                        className="w-full h-full bg-cover bg-center"
-                                        style={{
-                                            backgroundImage: `url(${article.urlToImage})`,
-                                        }}
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                                        No Image Available
-                                    </div>
-                                )}
-                            </div>
-                            <div className="p-4 flex-grow flex flex-col">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-xs text-gray-500">
-                                        {article.source.name}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                        {formatDate(
-                                            article.publishedAt
-                                        )}
-                                    </span>
+                    {newsData.map(
+                        (article: NewsArticle, index: number) => (
+                            <div
+                                key={index}
+                                className="border rounded-lg overflow-hidden flex flex-col"
+                            >
+                                <div className="h-48 bg-gray-100 relative">
+                                    {article.urlToImage ? (
+                                        <div
+                                            className="w-full h-full bg-cover bg-center"
+                                            style={{
+                                                backgroundImage: `url(${article.urlToImage})`,
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                                            No Image Available
+                                        </div>
+                                    )}
                                 </div>
-                                <h3 className="font-semibold mb-2 line-clamp-2">
-                                    {article.title}
-                                </h3>
-                                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                                    {article.description ||
-                                        'No description available.'}
-                                </p>
-                                <a
-                                    href={article.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-auto text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                >
-                                    Read full article
-                                </a>
+                                <div className="p-4 flex-grow flex flex-col">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className="text-xs text-gray-500">
+                                            {article.source.name}
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                            {formatDate(
+                                                article.publishedAt
+                                            )}
+                                        </span>
+                                    </div>
+                                    <h3 className="font-semibold mb-2 line-clamp-2">
+                                        {article.title}
+                                    </h3>
+                                    <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                                        {article.description ||
+                                            'No description available.'}
+                                    </p>
+                                    <a
+                                        href={article.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mt-auto text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                    >
+                                        Read full article
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    )}
                 </div>
             )}
 

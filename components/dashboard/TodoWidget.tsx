@@ -42,21 +42,25 @@ const TodoWidget: React.FC<TodoWidgetProps> = ({
         setNewTodo('');
     };
 
-    const completedCount = todos.filter(
-        (todo) => todo.completed
-    ).length;
-    const totalCount = todos.length;
-
     return (
-        <div className="bg-white text-black rounded-xl shadow h-full flex flex-col">
-            <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
-                <h3 className="font-bold text-lg">Todo List</h3>
-                <p className="text-sm text-green-100">
-                    {completedCount} of {totalCount} tasks completed
-                </p>
-            </div>
+        <div className="bg-white text-black rounded-lg h-[300px] flex flex-col border-2 border-gray-400 dark:border-0 shadow-sm">
+            <form onSubmit={addTodo} className="flex">
+                <input
+                    type="text"
+                    value={newTodo}
+                    onChange={(e) => setNewTodo(e.target.value)}
+                    placeholder="Add a new task..."
+                    className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                />
+                <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded-r-md hover:bg-green-600"
+                >
+                    +
+                </button>
+            </form>
 
-            <div className="p-4 flex-grow overflow-auto">
+            <div className="p-4 flex-grow flex-wrap overflow-y-scroll overflow-x-hidden">
                 {todos.length === 0 ? (
                     <p className="text-gray-500 text-center py-4">
                         No tasks yet
@@ -91,26 +95,8 @@ const TodoWidget: React.FC<TodoWidgetProps> = ({
                 )}
             </div>
 
-            <div className="p-4 border-t">
-                <form onSubmit={addTodo} className="flex">
-                    <input
-                        type="text"
-                        value={newTodo}
-                        onChange={(e) => setNewTodo(e.target.value)}
-                        placeholder="Add a new task..."
-                        className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-green-500 text-white px-4 py-2 rounded-r-md hover:bg-green-600"
-                    >
-                        Add
-                    </button>
-                </form>
-            </div>
-
             <div
-                className="px-4 py-2 bg-gray-50 text-xs text-gray-500 text-center cursor-pointer"
+                className="px-4 py-2 bg-gray-50 text-xs text-gray-500 text-center cursor-pointer rounded-b-lg"
                 onClick={() => router.push('/todos')}
             >
                 View all tasks

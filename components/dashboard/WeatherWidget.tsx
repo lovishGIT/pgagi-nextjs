@@ -13,7 +13,7 @@ const WeatherWidget = ({ locations }: {
             if (locations && locations.length > 0) {
                 const weather = await fetch(`/api/services/weather?lat=${locations[0].lat}&lon=${locations[0].lng}`);
                 const data = await weather.json();
-                console.log(data);
+                // console.log(data);
                 setWeatherData(data);
             }
         };
@@ -22,7 +22,7 @@ const WeatherWidget = ({ locations }: {
 
     if (!weatherData || !weatherData.weather) {
         return (
-            <div className="bg-white text-black rounded-lg shadow p-4 h-full flex items-center justify-center">
+            <div className="dark:bg-white dark:text-black bg-black text-white rounded-lg shadow p-4 h-full flex items-center justify-center">
                 <p className="text-gray-500">
                     Weather data unavailable
                 </p>
@@ -36,7 +36,7 @@ const WeatherWidget = ({ locations }: {
 
     return (
         <div
-            className="bg-white rounded-lg shadow overflow-hidden cursor-pointer"
+            className="bg-white text-black rounded-lg overflow-hidden cursor-pointer border-2 border-gray-400 shadow-sm"
             onClick={() => router.push('/weather')}
         >
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
@@ -82,7 +82,7 @@ const WeatherWidget = ({ locations }: {
                 </div>
             </div>
 
-            <div className="px-4 py-2 bg-gray-50 text-xs text-gray-500 text-center">
+            <div className="px-4 py-2 bg-gray-50 text-xs text-gray-500 text-center cursor-pointer">
                 Click for detailed forecast
             </div>
         </div>
