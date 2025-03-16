@@ -167,10 +167,10 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: {
                     </button>
                 </div>
 
-                <button className="flex items-center gap-3 px-4 py-2 mt-2 w-full rounded-lg text-destructive hover:bg-destructive/10 transition-colors duration-200">
+                <Link href="/auth/signout" className="flex items-center gap-3 px-4 py-2 mt-2 w-full rounded-lg text-destructive hover:bg-destructive/10 transition-colors duration-200">
                     <LogOut className="w-5 h-5" />
                     <span>Log Out</span>
-                </button>
+                </Link>
             </div>
         </div>
     );

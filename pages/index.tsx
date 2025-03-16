@@ -5,11 +5,19 @@ import Layout from '@/components/global/Layout';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
+
 import WeatherWidget from '@/components/dashboard/WeatherWidget';
 import TodoWidget from '@/components/dashboard/TodoWidget';
 import StocksWidget from '@/components/dashboard/StocksWidget';
 import NewsWidget from '@/components/dashboard/NewsWidget';
 import LocationWidget from '@/components/dashboard/LocationWidget';
+
+import { fetchUserLocations } from '@/services/location.service';
+import { fetchWeather } from '@/services/weather.service';
+import { fetchStocks } from '@/services/stocks.service';
+import { fetchNews } from '@/services/news.service';
+import { fetchTodos } from '@/services/todo.service';
+import { useAppDispatch } from '@/store/hooks';
 
 interface DashboardProps {
     weatherData: any;
@@ -109,43 +117,16 @@ export const getServerSideProps: GetServerSideProps = withAuth(
         }
 
         try {
-            const userLocations = [
-                { id: 1, name: 'Home', lat: 40.7128, lng: -74.006 },
-                { id: 2, name: 'Work', lat: 34.0522, lng: -118.2437 },
-            ];
-
-            const weatherResponse = await fetch(
-                `https://api.openweathermap.org/data/2.5/weather?lat=${userLocations[0].lat}&lon=${userLocations[0].lng}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
+            const dispatch = useAppDispatch();
+            const userLocations = await fetchUserLocations(dispatch);
+            const weatherData = await fetchWeather(
+                dispatch,
+                userLocations[0].lat,
+                userLocations[0].lng
             );
-            const weatherData = await weatherResponse.json();
-
-            const stocksResponse = await fetch(
-                `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=${process.env.ALPHAVANTAGE_API_KEY}`
-            );
-            const stocksData = await stocksResponse.json();
-
-            const newsResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.NEWS_API_KEY}`
-            );
-            const newsData = await newsResponse.json();
-
-            const todos = [
-                {
-                    id: 1,
-                    title: 'Complete dashboard project',
-                    completed: false,
-                },
-                {
-                    id: 2,
-                    title: 'Research stock markets',
-                    completed: true,
-                },
-                {
-                    id: 3,
-                    title: 'Schedule doctor appointment',
-                    completed: false,
-                },
-            ];
+            const stocksData = await fetchStocks('MSFT');
+            const newsData = await fetchNews();
+            const todos = fetchTodos();
 
             return {
                 props: {
