@@ -2,7 +2,7 @@
 
 This is a (Next.js based) PGAGI Dashboard. It is a web application that allows users to view and manage their daily life. Whether it is about checking weather, managing tasks, or tracking stocks and some daily news, this application has got you covered.
 
-![Dashboard Image](https://github.com/lovishGIT/pgagi-nextjs/tree/main/public/Dashboard.png)
+![Dashboard Image](https://cdn.jsdelivr.net/gh/lovishGIT/pgagi-nextjs/public/Dashboard.png)
 
 ## Ideation
 
