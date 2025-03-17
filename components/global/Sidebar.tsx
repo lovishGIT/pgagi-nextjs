@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 type NavItemProps = {
     href: string;
@@ -62,6 +63,14 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: {
     const { isDark, toggleDarkMode } = useDarkMode();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const pathname = usePathname();
+
+    const handleLogout = async () => {
+        try {
+            await signOut({ callbackUrl: '/' }); // Redirects to home after logout
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
 
     const navLinks = [
         {
@@ -167,10 +176,13 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: {
                     </button>
                 </div>
 
-                <Link href="/auth/signout" className="flex items-center gap-3 px-4 py-2 mt-2 w-full rounded-lg text-destructive hover:bg-destructive/10 transition-colors duration-200">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-2 mt-2 w-full rounded-lg text-destructive hover:bg-destructive/10 transition-colors duration-200"
+                >
                     <LogOut className="w-5 h-5" />
                     <span>Log Out</span>
-                </Link>
+                </button>
             </div>
         </div>
     );

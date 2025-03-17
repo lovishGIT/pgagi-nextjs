@@ -41,23 +41,23 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async jwt({ token, account, user }) {
-            if (account && user) {
-                token.accessToken = account.access_token;
+            if (account) {
+                token.accessToken = account.access_token; // Works for OAuth (GitHub, Google)
+            }
+            if (user) {
                 token.user = user;
             }
             return token;
         },
         async session({ session, token }) {
-            session.accessToken = token.accessToken as string;
-            if (token.user) {
-                session.user = token.user as typeof token.user;
-            }
+            session.accessToken = token.accessToken;
+            session.user = token.user as typeof session.user;
             return session;
         },
     },
     session: {
         strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 15 * 24 * 60 * 60, // 15 days
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
