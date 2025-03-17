@@ -37,7 +37,6 @@ export default function SignIn({
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            // Check if dark mode is enabled in localStorage or system preference
             const darkModeEnabled =
                 localStorage.getItem('darkMode') === 'true' ||
                 window.matchMedia('(prefers-color-scheme: dark)')
@@ -45,7 +44,6 @@ export default function SignIn({
 
             setIsDark(darkModeEnabled);
 
-            // Apply dark mode class to document if needed
             if (darkModeEnabled) {
                 document.documentElement.classList.add('dark');
             } else {
@@ -350,8 +348,7 @@ export default function SignIn({
                             )}
                     </div>
 
-                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 sm:px-10">
-                        <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                    <div className="px-6 py-4 text-center">
                             Don&apos;t have an account?{' '}
                             <Link
                                 href="/auth/signup"
@@ -359,7 +356,7 @@ export default function SignIn({
                             >
                                 Sign up
                             </Link>
-                        </p>
+
                     </div>
                 </div>
             </div>
