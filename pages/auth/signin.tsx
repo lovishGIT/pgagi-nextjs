@@ -25,9 +25,7 @@ export default function SignIn({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [isDark, setIsDark] = useState(false);
 
-    // Extract query parameters
     const searchParams =
         typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
@@ -42,8 +40,6 @@ export default function SignIn({
                 window.matchMedia('(prefers-color-scheme: dark)')
                     .matches;
 
-            setIsDark(darkModeEnabled);
-
             if (darkModeEnabled) {
                 document.documentElement.classList.add('dark');
             } else {
@@ -51,18 +47,6 @@ export default function SignIn({
             }
         }
     }, []);
-
-    const toggleDarkMode = () => {
-        setIsDark(!isDark);
-
-        if (!isDark) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('darkMode', 'true');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('darkMode', 'false');
-        }
-    };
 
     const handleCredentialSignIn = async (
         e: React.FormEvent<HTMLFormElement>
@@ -106,7 +90,7 @@ export default function SignIn({
                 />
             </Head>
 
-            <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-gray-900">
                 <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors duration-200">
                     {registered && (
                         <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 p-4">
@@ -124,20 +108,6 @@ export default function SignIn({
                             </div>
                         </div>
                     )}
-
-                    <div className="absolute top-4 right-4">
-                        <button
-                            onClick={toggleDarkMode}
-                            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            aria-label="Toggle dark mode"
-                        >
-                            {isDark ? (
-                                <Sun className="h-5 w-5 text-yellow-400" />
-                            ) : (
-                                <Moon className="h-5 w-5 text-gray-700" />
-                            )}
-                        </button>
-                    </div>
 
                     <div className="px-6 pt-10 pb-8">
                         <div className="text-center mb-10">

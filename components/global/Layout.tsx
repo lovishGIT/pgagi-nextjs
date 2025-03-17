@@ -18,7 +18,7 @@ export default function Layout({
             <div
                 className={clsx(
                     'flex flex-col flex-1 transition-all duration-300 ease-in-out',
-                    sidebarOpen ? 'ml-64' : 'ml-20'
+                    sidebarOpen ? 'md:ml-64' : 'ml-20'
                 )}
             >
 
