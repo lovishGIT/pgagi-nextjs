@@ -28,9 +28,10 @@ export default async function handler(
     }
 
     try {
-        const weatherData = await fetchWeather(lat, lon);
+        const weatherData = await fetchWeather(parseFloat(lat as string), parseFloat(lon as string));
         return res.status(200).json(weatherData);
-    } catch (error) {
+    } catch (err) {
+        console.warn("err at weather service api", err);
         return res
             .status(500)
             .json({ message: 'Failed to fetch weather data' });

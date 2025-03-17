@@ -16,7 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const articles = await fetchNews(category as string , parseInt(limit as string));
         res.status(200).json({ articles });
-    } catch (error) {
+    } catch (err) {
+        console.warn("Error at news service api: ", err);
         res.status(500).json({ error: 'Failed to fetch news' });
     }
 };

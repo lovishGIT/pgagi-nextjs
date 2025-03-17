@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Command,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
@@ -7,10 +8,9 @@ import {
     CommandItem,
     CommandList,
 } from '@/components/ui/command';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/compat/router';
 import { Search } from 'lucide-react';
 
-// Define the page structure types
 type PageItem = {
     title: string;
     href: string;
@@ -22,7 +22,6 @@ const CommandButton: React.FC = () => {
     const [open, setOpen] = React.useState<boolean>(false);
     const router = useRouter();
 
-    // Pages configuration - you can expand this
     const pages: PageItem[] = [
         {
             title: 'Home',
@@ -63,7 +62,7 @@ const CommandButton: React.FC = () => {
 
     // Handle navigation
     const handleNavigate = (href: string) => {
-        router.push(href);
+        router?.push(href);
         setOpen(false);
     };
 
@@ -83,6 +82,10 @@ const CommandButton: React.FC = () => {
         };
     }, []);
 
+    if (router?.isFallback) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="w-full">
             <button
@@ -100,57 +103,60 @@ const CommandButton: React.FC = () => {
             <CommandDialog
                 open={open}
                 onOpenChange={setOpen}
-                label="Type a command or search..."
+                title="Search"
+                description="Search for pages and actions"
             >
-                <CommandInput placeholder="Search for pages, features, or help..." />
-                <CommandList>
-                    <CommandEmpty>
-                        No results found. Try a different search.
-                    </CommandEmpty>
+                <Command>
+                    <CommandInput placeholder="Search for news, stocks, help..." />
+                    <CommandList>
+                        <CommandEmpty>
+                            No results found. Try a different search.
+                        </CommandEmpty>
 
-                    <CommandGroup heading="Pages">
-                        {pages.map((page) => (
+                        <CommandGroup heading="Pages">
+                            {pages.map((page) => (
+                                <CommandItem
+                                    key={page.href}
+                                    onSelect={() =>
+                                        handleNavigate(page.href)
+                                    }
+                                    className="flex items-center justify-between cursor-pointer"
+                                >
+                                    <div className="flex flex-col">
+                                        <span>{page.title}</span>
+                                        {page.description && (
+                                            <span className="text-xs text-muted-foreground">
+                                                {page.description}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <kbd className="text-xs px-1.5 py-0.5 bg-muted rounded">
+                                        ↵
+                                    </kbd>
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+
+                        <CommandGroup heading="Actions">
                             <CommandItem
-                                key={page.href}
-                                onSelect={() =>
-                                    handleNavigate(page.href)
-                                }
-                                className="flex items-center justify-between cursor-pointer"
+                                onSelect={() => {
+                                    setOpen(false);
+                                    // You can add other actions here
+                                }}
                             >
-                                <div className="flex flex-col">
-                                    <span>{page.title}</span>
-                                    {page.description && (
-                                        <span className="text-xs text-muted-foreground">
-                                            {page.description}
-                                        </span>
-                                    )}
-                                </div>
-                                <kbd className="text-xs px-1.5 py-0.5 bg-muted rounded">
-                                    ↵
-                                </kbd>
+                                <span>Log out</span>
                             </CommandItem>
-                        ))}
-                    </CommandGroup>
-
-                    <CommandGroup heading="Actions">
-                        <CommandItem
-                            onSelect={() => {
-                                setOpen(false);
-                                // You can add other actions here
-                            }}
-                        >
-                            <span>Log out</span>
-                        </CommandItem>
-                        <CommandItem
-                            onSelect={() => {
-                                setOpen(false);
-                                // Theme toggle action
-                            }}
-                        >
-                            <span>Toggle theme</span>
-                        </CommandItem>
-                    </CommandGroup>
-                </CommandList>
+                            <CommandItem
+                                onSelect={() => {
+                                    setOpen(false);
+                                    // Theme toggle action
+                                }}
+                            >
+                                <span>Toggle theme</span>
+                            </CommandItem>
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
             </CommandDialog>
         </div>
     );

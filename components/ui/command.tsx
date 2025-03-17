@@ -11,10 +11,12 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 
-function Command({
-    className,
-    ...props
-}: React.ComponentProps<typeof CommandPrimitive>) {
+// Explicitly define types that accept children
+type CommandProps = React.ComponentProps<typeof CommandPrimitive> & {
+    children?: React.ReactNode;
+};
+
+function Command({ className, children, ...props }: CommandProps) {
     return (
         <CommandPrimitive
             data-slot="command"
@@ -23,19 +25,24 @@ function Command({
                 className
             )}
             {...props}
-        />
+        >
+            {children}
+        </CommandPrimitive>
     );
 }
+
+type CommandDialogProps = React.ComponentProps<typeof Dialog> & {
+    title?: string;
+    description?: string;
+    children?: React.ReactNode;
+};
 
 function CommandDialog({
     title = 'Command Palette',
     description = 'Search for a command to run...',
-    children,   
+    children,
     ...props
-}: React.ComponentProps<typeof Dialog> & {
-    title?: string;
-    description?: string;
-}) {
+}: CommandDialogProps) {
     return (
         <Dialog {...props}>
             <DialogHeader className="sr-only">
@@ -51,10 +58,11 @@ function CommandDialog({
     );
 }
 
-function CommandInput({
-    className,
-    ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+type CommandInputProps = React.ComponentProps<
+    typeof CommandPrimitive.Input
+>;
+
+function CommandInput({ className, ...props }: CommandInputProps) {
     return (
         <div
             data-slot="command-input-wrapper"
@@ -73,10 +81,17 @@ function CommandInput({
     );
 }
 
+type CommandListProps = React.ComponentProps<
+    typeof CommandPrimitive.List
+> & {
+    children?: React.ReactNode;
+};
+
 function CommandList({
     className,
+    children,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+}: CommandListProps) {
     return (
         <CommandPrimitive.List
             data-slot="command-list"
@@ -85,26 +100,43 @@ function CommandList({
                 className
             )}
             {...props}
-        />
+        >
+            {children}
+        </CommandPrimitive.List>
     );
 }
 
-function CommandEmpty({
-    ...props
-}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+type CommandEmptyProps = React.ComponentProps<
+    typeof CommandPrimitive.Empty
+> & {
+    children?: React.ReactNode;
+};
+
+function CommandEmpty({ children, ...props }: CommandEmptyProps) {
     return (
         <CommandPrimitive.Empty
             data-slot="command-empty"
             className="py-6 text-center text-sm"
             {...props}
-        />
+        >
+            {children}
+        </CommandPrimitive.Empty>
     );
 }
 
+type CommandGroupProps = React.ComponentProps<
+    typeof CommandPrimitive.Group
+> & {
+    heading?: React.ReactNode;
+    children?: React.ReactNode;
+};
+
 function CommandGroup({
     className,
+    heading,
+    children,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Group>) {
+}: CommandGroupProps) {
     return (
         <CommandPrimitive.Group
             data-slot="command-group"
@@ -112,15 +144,22 @@ function CommandGroup({
                 'text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium',
                 className
             )}
+            heading={heading}
             {...props}
-        />
+        >
+            {children}
+        </CommandPrimitive.Group>
     );
 }
+
+type CommandSeparatorProps = React.ComponentProps<
+    typeof CommandPrimitive.Separator
+>;
 
 function CommandSeparator({
     className,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+}: CommandSeparatorProps) {
     return (
         <CommandPrimitive.Separator
             data-slot="command-separator"
@@ -130,10 +169,17 @@ function CommandSeparator({
     );
 }
 
+type CommandItemProps = React.ComponentProps<
+    typeof CommandPrimitive.Item
+> & {
+    children?: React.ReactNode;
+};
+
 function CommandItem({
     className,
+    children,
     ...props
-}: React.ComponentProps<typeof CommandPrimitive.Item>) {
+}: CommandItemProps) {
     return (
         <CommandPrimitive.Item
             data-slot="command-item"
@@ -142,14 +188,21 @@ function CommandItem({
                 className
             )}
             {...props}
-        />
+        >
+            {children}
+        </CommandPrimitive.Item>
     );
 }
 
+type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement> & {
+    children?: React.ReactNode;
+};
+
 function CommandShortcut({
     className,
+    children,
     ...props
-}: React.ComponentProps<'span'>) {
+}: CommandShortcutProps) {
     return (
         <span
             data-slot="command-shortcut"
@@ -158,7 +211,9 @@ function CommandShortcut({
                 className
             )}
             {...props}
-        />
+        >
+            {children}
+        </span>
     );
 }
 

@@ -7,7 +7,7 @@ const LocationWidget = ({ locations }: {
 }) => {
     const [selectedLocation, setSelectedLocation] =
         useState<UserLocation | null>(
-            locations && locations.length > 0 ? locations[0] : null
+            locations[0] || null
         );
     const [isAddingLocation, setIsAddingLocation] = useState(false);
     const [newLocationName, setNewLocationName] = useState('');

@@ -16,7 +16,7 @@ export const postTodo = async (
 ) => {
     try {
         const newTodo: Todo = {
-            title, completed: false, createdAt: Date.now().toLocaleString()
+            id: Date.now(), title, completed: false, createdAt: Date.now().toLocaleString()
         };
         return newTodo;
     } catch (error) {

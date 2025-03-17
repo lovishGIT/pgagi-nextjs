@@ -1,19 +1,24 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { UserLocation, WeatherData } from '@/types';
+import Image from 'next/image';
 
-const WeatherWidget = ({ locations }: {
+const WeatherWidget = ({
+    locations,
+}: {
     locations: UserLocation[];
 }) => {
     const router = useRouter();
-    const [weatherData, setWeatherData] = React.useState<WeatherData | null>(null);
+    const [weatherData, setWeatherData] =
+        React.useState<WeatherData | null>(null);
 
     React.useEffect(() => {
         const fetchWeatherData = async () => {
-            if (locations && locations.length > 0) {
-                const weather = await fetch(`/api/services/weather?lat=${locations[0].lat}&lon=${locations[0].lng}`);
+            if (locations && locations.length > 0 && locations[0]) {
+                const weather = await fetch(
+                    `/api/services/weather?lat=${locations[0].lat}&lon=${locations[0].lng}`
+                );
                 const data = await weather.json();
-                // console.log(data);
                 setWeatherData(data);
             }
         };
@@ -34,10 +39,14 @@ const WeatherWidget = ({ locations }: {
         return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
     };
 
+    if (router?.isFallback) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div
-            className="bg-white text-black rounded-lg overflow-hidden cursor-pointer border-2 border-gray-400 shadow-sm"
-            onClick={() => router.push('/weather')}
+            className="bg-white text-black rounded-lg overflow-hidden cursor-pointer border-2 border-gray-400 shadow-sm flex flex-col"
+            onClick={() => router?.push('/weather')}
         >
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
                 <h3 className="font-bold text-lg">Current Weather</h3>
@@ -46,22 +55,31 @@ const WeatherWidget = ({ locations }: {
                 </p>
             </div>
 
-            <div className="p-4">
+            <div className="p-4 h-[70%]">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                        <img
+                        <Image
                             src={getWeatherIcon(
-                                weatherData.weather[0].icon
+                                weatherData.weather?.[0]?.icon || ''
                             )}
-                            alt={weatherData.weather[0].description}
+                            alt={
+                                weatherData.weather?.[0]
+                                    ?.description || 'Weather icon'
+                            }
+                            title={
+                                weatherData.weather?.[0]
+                                    ?.description || 'Weather icon'
+                            }
                             className="w-16 h-16"
+                            width={64}
+                            height={64}
                         />
                         <div className="ml-2">
                             <div className="text-3xl font-bold">
                                 {Math.round(weatherData.main.temp)}°C
                             </div>
                             <div className="text-gray-500 capitalize">
-                                {weatherData.weather[0].description}
+                                {weatherData.weather?.[0]?.description}
                             </div>
                         </div>
                     </div>

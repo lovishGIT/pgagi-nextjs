@@ -3,10 +3,9 @@ import { GetServerSideProps } from 'next';
 import {
     getProviders,
     signIn,
-    getCsrfToken,
     getSession,
 } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import Link from 'next/link';
 import Head from 'next/head';
 
@@ -22,7 +21,11 @@ export default function SignIn({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const { callbackUrl, registered } = router.query;
+    const { callbackUrl, registered } = (router?.query) || {};
+
+    if (router?.isFallback) {
+        return <div>Loading...</div>;
+    }
 
     const handleCredentialSignIn = async (
         e: React.FormEvent<HTMLFormElement>
@@ -47,9 +50,10 @@ export default function SignIn({
                 setError('Invalid email or password');
                 setIsLoading(false);
             } else if (result?.url) {
-                router.push(result.url);
+                router?.push(result.url);
             }
         } catch (error) {
+            console.error("Error at pages/auth/siginin", error);
             setError('An error occurred. Please try again.');
             setIsLoading(false);
         }
@@ -363,7 +367,7 @@ export default function SignIn({
 
                     <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 sm:px-10">
                         <p className="text-xs leading-5 text-gray-500">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?
                             <Link
                                 href="/auth/signup"
                                 className="font-medium text-blue-600 hover:text-blue-500 transition ease-in-out duration-150"

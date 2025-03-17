@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '@/components/global/Layout';
 import { withAuth } from '@/components/auth/withAuth';
 import { useAuth } from '@/hooks/useAuth';
 import { getSession } from 'next-auth/react';
@@ -13,30 +12,20 @@ import LocationWidget from '@/components/dashboard/LocationWidget';
 
 import { fetchUserLocations } from '@/services/location.service';
 import { fetchTodos } from '@/services/todo.service';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppDispatch } from '@/store/hooks';
 import { setTodos } from '@/store/slices/todos.slice';
 import { setLocations } from '@/store/slices/location.slice';
-import { setWeather } from '@/store/slices/weather.slice';
-import { UserLocation } from '@/types';
+import { Todo, UserLocation } from '@/types';
 
 interface DashboardProps {
-    todos: any[];
-    initialWeather: any | null;
+    todos: Todo[];
 }
 
-export default function Dashboard({
-    todos,
-    initialWeather,
-}: DashboardProps) {
+export default function Dashboard({ todos }: DashboardProps) {
     const dispatch = useAppDispatch();
     const [userLocations, setUserLocations] = useState<
         UserLocation[]
     >([]);
-
-    const weather = useAppSelector((state) => state.weather.data);
-    const weatherError = useAppSelector(
-        (state) => state.weather.error
-    );
 
     useEffect(() => {
         dispatch(setTodos(todos));
@@ -49,22 +38,18 @@ export default function Dashboard({
             }
         };
         fetchFromUser();
-
-        if (initialWeather) {
-            dispatch(setWeather(initialWeather));
-        }
-    }, [dispatch, todos, initialWeather]);
+    }, [dispatch, todos]);
 
     const { session } = useAuth();
 
     return (
-        <Layout>
+        <>
             <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">
                     Welcome back, {session?.user?.name}
                 </h1>
                 <p className="text-gray-600">
-                    Here's an overview of your dashboard
+                    Here&apos;s an overview of your dashboard
                 </p>
             </div>
 
@@ -73,9 +58,7 @@ export default function Dashboard({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <LocationWidget locations={userLocations} />
 
-                        <WeatherWidget
-                            locations={userLocations}
-                        />
+                        <WeatherWidget locations={userLocations} />
                     </div>
                 </div>
 
@@ -91,7 +74,7 @@ export default function Dashboard({
                     <NewsWidget />
                 </div>
             </div>
-        </Layout>
+        </>
     );
 }
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import Sidebar from '@/components/global/Sidebar';
-import { useAuth } from '@/hooks/useAuth';
-import Link from 'next/link';
-import clsx from 'clsx'; // ✅ Import for class handling
+import clsx from 'clsx';
 
 export default function Layout({
     children,
@@ -10,7 +8,6 @@ export default function Layout({
     children: React.ReactNode;
 }) {
     const [sidebarOpen, setSidebarOpen] = React.useState(true);
-    const { isAuthenticated, session, signOut } = useAuth();
 
     return (
         <div className="flex h-screen overflow-hidden bg-background">

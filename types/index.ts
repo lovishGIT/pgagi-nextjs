@@ -6,6 +6,7 @@ export interface UserLocation {
 }
 
 export interface User {
+    id?: string;
     name: string;
     email: string;
     password: string;
@@ -18,20 +19,16 @@ export interface NewsArticle {
     source: { name: string };
 }
 
-export interface Stock {
-    symbol: string;
+export interface StockData {
+    ticker: string;
     price: number;
-    change: number;
-    fundamentals?: {
-        investors?: string[],
-        profit: {
-            annual: number, // Can go Negative Too
-            quaterly: number
-        },
-    }
+    change_amount: number;
+    change_percentage: string;
+    volume?: string;
 }
 
 export interface Todo {
+    id: number;
     title: string;
     completed: boolean;
     createdAt: string;

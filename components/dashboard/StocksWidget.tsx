@@ -1,28 +1,21 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { StockData } from '@/types';
 
-interface StockData {
-    ticker: string;
-    price: number;
-    change_amount: number;
-    change_percentage: string;
-    volume?: string;
-}
-
-const sampleData: StockData[] = [
-    {
-        ticker: 'NVIDIA',
-        price: 195.2,
-        change_amount: 5.8,
-        change_percentage: '+3.06%',
-    },
-    {
-        ticker: 'Amazon',
-        price: 3335.55,
-        change_amount: 16.75,
-        change_percentage: '+0.50%',
-    },
-];
+// const sampleData: StockData[] = [
+//     {
+//         ticker: 'NVIDIA',
+//         price: 195.2,
+//         change_amount: 5.8,
+//         change_percentage: '+3.06%',
+//     },
+//     {
+//         ticker: 'Amazon',
+//         price: 3335.55,
+//         change_amount: 16.75,
+//         change_percentage: '+0.50%',
+//     },
+// ];
 
 const StocksWidget = () => {
     const router = useRouter();
@@ -45,10 +38,14 @@ const StocksWidget = () => {
         fetchStocks();
     }, []);
 
+    if (router?.isFallback) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div
             className="bg-white rounded-lg shadow h-full flex flex-col cursor-pointer border-2 border-gray-400 dark:border-0"
-            onClick={() => router.push('/stocks')}
+            onClick={() => router?.push('/stocks')}
         >
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 text-white rounded-t-xl">
                 <h3 className="font-bold text-lg">

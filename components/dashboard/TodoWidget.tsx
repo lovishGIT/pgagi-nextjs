@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-
-interface Todo {
-    id: number;
-    title: string;
-    completed: boolean;
-}
+import { useRouter } from 'next/compat/router';
+import { Todo } from '@/types';
 
 interface TodoWidgetProps {
     todos: Todo[];
@@ -36,11 +31,16 @@ const TodoWidget: React.FC<TodoWidgetProps> = ({
             id: Date.now(),
             title: newTodo.trim(),
             completed: false,
+            createdAt: new Date().toISOString(),
         };
 
         setTodos([...todos, newTodoItem]);
         setNewTodo('');
     };
+
+    if (router?.isFallback) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="bg-white text-black rounded-lg h-[300px] flex flex-col border-2 border-gray-400 dark:border-0 shadow-sm">
@@ -97,7 +97,7 @@ const TodoWidget: React.FC<TodoWidgetProps> = ({
 
             <div
                 className="px-4 py-2 bg-gray-50 text-xs text-gray-500 text-center cursor-pointer rounded-b-lg"
-                onClick={() => router.push('/todos')}
+                onClick={() => router?.push('/todos')}
             >
                 View all tasks
             </div>
