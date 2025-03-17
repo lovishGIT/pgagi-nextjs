@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Head from 'next/head';
 import {
-    Sun,
-    Moon,
     CheckCircle,
     AlertCircle,
     Github,
