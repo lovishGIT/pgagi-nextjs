@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { getProviders, signIn, getSession } from 'next-auth/react';
-import { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Head from 'next/head';
-import { useTheme } from 'next-themes';
 import {
     Sun,
     Moon,
@@ -26,19 +25,46 @@ export default function SignIn({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const { callbackUrl, registered } = router?.query || {};
+    const [isDark, setIsDark] = useState(false);
 
-    // Theme handling
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
+    // Extract query parameters
+    const searchParams =
+        typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search)
+            : new URLSearchParams();
+    const callbackUrl = searchParams.get('callbackUrl') || '/';
+    const registered = searchParams.get('registered') || '';
 
     useEffect(() => {
-        setMounted(true);
+        if (typeof window !== 'undefined') {
+            // Check if dark mode is enabled in localStorage or system preference
+            const darkModeEnabled =
+                localStorage.getItem('darkMode') === 'true' ||
+                window.matchMedia('(prefers-color-scheme: dark)')
+                    .matches;
+
+            setIsDark(darkModeEnabled);
+
+            // Apply dark mode class to document if needed
+            if (darkModeEnabled) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
     }, []);
 
-    if (router?.isFallback || !mounted) {
-        return <div>Loading...</div>;
-    }
+    const toggleDarkMode = () => {
+        setIsDark(!isDark);
+
+        if (!isDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('darkMode', 'false');
+        }
+    };
 
     const handleCredentialSignIn = async (
         e: React.FormEvent<HTMLFormElement>
@@ -56,40 +82,36 @@ export default function SignIn({
                 redirect: false,
                 email,
                 password,
-                callbackUrl: (callbackUrl as string) || '/',
+                callbackUrl: callbackUrl || '/',
             });
 
             if (result?.error) {
                 setError('Invalid email or password');
                 setIsLoading(false);
             } else if (result?.url) {
-                router?.push(result.url);
+                router.push(result.url);
             }
         } catch (error) {
-            console.error('Error at pages/auth/siginin', error);
+            console.error('Error during sign in:', error);
             setError('An error occurred. Please try again.');
             setIsLoading(false);
         }
     };
 
-    const toggleTheme = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
-    };
-
     return (
         <>
             <Head>
-                <title>Sign In | Dashboard App</title>
+                <title>Sign In | MyApp</title>
                 <meta
                     name="description"
                     content="Sign in to your dashboard account"
                 />
             </Head>
 
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors duration-200">
                     {registered && (
-                        <div className="bg-green-50 dark:bg-green-900 border-l-4 border-green-500 p-4">
+                        <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 p-4">
                             <div className="flex">
                                 <div className="flex-shrink-0">
                                     <CheckCircle className="h-5 w-5 text-green-400" />
@@ -107,10 +129,11 @@ export default function SignIn({
 
                     <div className="absolute top-4 right-4">
                         <button
-                            onClick={toggleTheme}
+                            onClick={toggleDarkMode}
                             className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Toggle dark mode"
                         >
-                            {theme === 'dark' ? (
+                            {isDark ? (
                                 <Sun className="h-5 w-5 text-yellow-400" />
                             ) : (
                                 <Moon className="h-5 w-5 text-gray-700" />
@@ -279,7 +302,6 @@ export default function SignIn({
                                                                 );
                                                             case 'Google':
                                                                 return (
-                                                                    // For Google, we'll use a placeholder since Lucide doesn't have a Google icon
                                                                     <span className="flex items-center justify-center w-5 h-5 text-red-500 font-bold">
                                                                         G
                                                                     </span>
@@ -299,7 +321,7 @@ export default function SignIn({
                                                                 provider.id,
                                                                 {
                                                                     callbackUrl:
-                                                                        (callbackUrl as string) ||
+                                                                        callbackUrl ||
                                                                         '/',
                                                                 }
                                                             )
